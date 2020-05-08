@@ -1,8 +1,12 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UniRx;
+using UniRx.Triggers;
 using UnityEngine;
+using UnityEngine.Experimental.UIElements;
 using UnityEngine.UI;
+using Button = UnityEngine.UI.Button;
 
 public class TapController : MonoBehaviour
 {
@@ -11,7 +15,9 @@ public class TapController : MonoBehaviour
     [SerializeField] private Button singleTapButton;
     [SerializeField] private Text singleCounter;
     [SerializeField] private Text judge;
-    
+    [SerializeField] private Button longTapButton;
+    [SerializeField] private GameObject Cube;
+
     private int _count = 0;
     private int _singleCount = 0;
 
@@ -25,6 +31,18 @@ public class TapController : MonoBehaviour
 
         tapButton.OnClickAsObservable()
             .Subscribe(_ => Count())
+            .AddTo(this);
+        
+        longTapButton.OnLongClickAsObservable()
+            .Subscribe(_ => Debug.Log("Long Tap"))
+            .AddTo(this);
+        
+        Cube.OnDoubleClickAsObservable()
+            .Subscribe(_ => Debug.Log("Double Click"))
+            .AddTo(this);
+         
+        Cube.OnMultiTapAsObservable()
+            .Subscribe(count => Debug.Log(count))
             .AddTo(this);
     }
 
